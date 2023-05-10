@@ -1,5 +1,6 @@
 package com.yrol.springbootrestfulwebservices.controller;
 
+import com.yrol.springbootrestfulwebservices.dto.UserDto;
 import com.yrol.springbootrestfulwebservices.entity.User;
 import com.yrol.springbootrestfulwebservices.service.UserService;
 import lombok.AllArgsConstructor;
@@ -23,8 +24,8 @@ public class UserController {
      * User creation POST REST API
      **/
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User savedUser = userService.createUser(user);
+    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+        UserDto savedUser = userService.createUser(userDto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 

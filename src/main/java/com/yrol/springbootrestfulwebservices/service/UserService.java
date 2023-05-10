@@ -1,12 +1,13 @@
 package com.yrol.springbootrestfulwebservices.service;
 
+import com.yrol.springbootrestfulwebservices.dto.UserDto;
 import com.yrol.springbootrestfulwebservices.entity.User;
 
 import java.util.List;
 
 public interface UserService {
 
-    User createUser(User user);
+    UserDto createUser(UserDto userDto);
 
     User getUserById(Long userId);
 

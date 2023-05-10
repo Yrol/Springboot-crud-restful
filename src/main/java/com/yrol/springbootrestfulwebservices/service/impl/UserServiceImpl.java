@@ -1,6 +1,8 @@
 package com.yrol.springbootrestfulwebservices.service.impl;
 
+import com.yrol.springbootrestfulwebservices.dto.UserDto;
 import com.yrol.springbootrestfulwebservices.entity.User;
+import com.yrol.springbootrestfulwebservices.mapper.UserMapper;
 import com.yrol.springbootrestfulwebservices.repository.UserRepository;
 import com.yrol.springbootrestfulwebservices.service.UserService;
 import lombok.AllArgsConstructor;
@@ -16,8 +18,13 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserDto createUser(UserDto userDto) {
+        // Convert UserDto into User JPA entity
+        User user = UserMapper.mapToUser(userDto);
+        User savedUser = userRepository.save(user);
+
+        // Converting the User JPA to entity to UserDto and return
+        return UserMapper.mapToUserDto(savedUser);
     }
 
     @Override
