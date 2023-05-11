@@ -34,8 +34,8 @@ public class UserController {
      * http://localhost:8080/api/users/1
      * **/
     @GetMapping("{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long userId) {
-        User user = userService.getUserById(userId);
+    public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId) {
+        UserDto user = userService.getUserById(userId);
         return ResponseEntity.ok(user);
     }
 
@@ -44,7 +44,7 @@ public class UserController {
      * http://localhost:8080/api/users
      * **/
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
@@ -53,9 +53,9 @@ public class UserController {
      * http://localhost:8080/api/users/1
      */
     @PutMapping("{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") Long userId, @RequestBody User user) {
+    public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId, @RequestBody User user) {
         user.setId(userId); // setting the user using the parameterised ID
-        User updatedUser = userService.updateUser(user);
+        UserDto updatedUser = userService.updateUser(user);
         return ResponseEntity.ok(updatedUser);
     }
 
