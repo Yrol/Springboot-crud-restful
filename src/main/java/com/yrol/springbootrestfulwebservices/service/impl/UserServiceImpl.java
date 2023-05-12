@@ -6,6 +6,7 @@ import com.yrol.springbootrestfulwebservices.mapper.UserMapper;
 import com.yrol.springbootrestfulwebservices.repository.UserRepository;
 import com.yrol.springbootrestfulwebservices.service.UserService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,14 +20,29 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
 
+    /**
+     * Using the ModelMapper for DTO mapping. Not using @Autowire since the Bean is injected in SpringbootRestfulWebservicesApplication
+     * **/
+    private ModelMapper modelMapper;
+
     @Override
     public UserDto createUser(UserDto userDto) {
-        // Convert UserDto into User JPA entity
-        User user = UserMapper.mapToUser(userDto);
-        User savedUser = userRepository.save(user);
 
-        // Converting the User JPA to entity to UserDto and return
-        return UserMapper.mapToUserDto(savedUser);
+        /**
+         * Method 1: Custom mapper - UserMapper
+         * Convert UserDto into User JPA entity, and Converting the User JPA to entity to UserDto
+         * **/
+//        User user = UserMapper.mapToUser(userDto);
+//        User savedUser = userRepository.save(user);
+//        return UserMapper.mapToUserDto(savedUser);
+
+        /**
+         * Method 2: Using ModelMapper library
+         * Convert UserDto into User JPA entity, and Converting the User JPA to entity to UserDto
+         * **/
+        User user = modelMapper.map(userDto, User.class);
+        User savedUser = userRepository.save(user);
+        return modelMapper.map(savedUser, UserDto.class);
     }
 
     @Override
@@ -34,7 +50,8 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = userRepository.findById(userId);
 
         try {
-            return UserMapper.mapToUserDto(optionalUser.get());
+//            return UserMapper.mapToUserDto(optionalUser.get()); // Using UserMapper custom mapper
+            return modelMapper.map(optionalUser.get(), UserDto.class); // using ModelMapper library
         } catch (NoSuchElementException e) {
             return null;
         }
@@ -43,7 +60,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
-        return users.stream().map(UserMapper::mapToUserDto)
+
+        // Using custom mapper UserMapper
+//        return users.stream().map(UserMapper::mapToUserDto)
+//                .collect(Collectors.toList());
+
+        // using ModelMapper library (lambda expression)
+        return users.stream().map((user) -> modelMapper.map(user, UserDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -53,7 +76,12 @@ public class UserServiceImpl implements UserService {
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
         existingUser.setEmail(user.getEmail());
-        return UserMapper.mapToUserDto(userRepository.save(existingUser));
+
+        // Using custom mapper: UserMapper
+//        return UserMapper.mapToUserDto(userRepository.save(existingUser));
+
+        // Using ModelMapper library
+        return modelMapper.map(userRepository.save(existingUser), UserDto.class);
     }
 
     @Override
