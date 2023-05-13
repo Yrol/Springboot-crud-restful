@@ -2,6 +2,7 @@ package com.yrol.springbootrestfulwebservices.service.impl;
 
 import com.yrol.springbootrestfulwebservices.dto.UserDto;
 import com.yrol.springbootrestfulwebservices.entity.User;
+import com.yrol.springbootrestfulwebservices.mapper.AutoUserMapper;
 import com.yrol.springbootrestfulwebservices.mapper.UserMapper;
 import com.yrol.springbootrestfulwebservices.repository.UserRepository;
 import com.yrol.springbootrestfulwebservices.service.UserService;
@@ -40,9 +41,17 @@ public class UserServiceImpl implements UserService {
          * Method 2: Using ModelMapper library
          * Convert UserDto into User JPA entity, and Converting the User JPA to entity to UserDto
          * **/
-        User user = modelMapper.map(userDto, User.class);
+//        User user = modelMapper.map(userDto, User.class);
+//        User savedUser = userRepository.save(user);
+//        return modelMapper.map(savedUser, UserDto.class);
+
+        /**
+         * Method 3: Using MapStruct library
+         * Convert UserDto into User JPA entity, and Converting the User JPA to entity to UserDto
+         * **/
+        User user = AutoUserMapper.MAPPER.mapToUser(userDto);
         User savedUser = userRepository.save(user);
-        return modelMapper.map(savedUser, UserDto.class);
+        return AutoUserMapper.MAPPER.mapToUserDto(savedUser);
     }
 
     @Override
@@ -51,7 +60,8 @@ public class UserServiceImpl implements UserService {
 
         try {
 //            return UserMapper.mapToUserDto(optionalUser.get()); // Using UserMapper custom mapper
-            return modelMapper.map(optionalUser.get(), UserDto.class); // using ModelMapper library
+//            return modelMapper.map(optionalUser.get(), UserDto.class); // using ModelMapper library
+            return AutoUserMapper.MAPPER.mapToUserDto(optionalUser.get()); // Using MapStruct library
         } catch (NoSuchElementException e) {
             return null;
         }
