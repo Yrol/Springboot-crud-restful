@@ -71,13 +71,18 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
 
-        // Using custom mapper UserMapper
+        // Method 1: Using custom mapper UserMapper
 //        return users.stream().map(UserMapper::mapToUserDto)
 //                .collect(Collectors.toList());
 
-        // using ModelMapper library (lambda expression)
-        return users.stream().map((user) -> modelMapper.map(user, UserDto.class))
+        // Method 2: Using ModelMapper library (lambda expression)
+//        return users.stream().map((user) -> modelMapper.map(user, UserDto.class))
+//                .collect(Collectors.toList());
+
+        // Method 3: Using MapStruct library
+        return users.stream().map((user) -> AutoUserMapper.MAPPER.mapToUserDto(user))
                 .collect(Collectors.toList());
+
     }
 
     @Override
@@ -87,11 +92,14 @@ public class UserServiceImpl implements UserService {
         existingUser.setLastName(user.getLastName());
         existingUser.setEmail(user.getEmail());
 
-        // Using custom mapper: UserMapper
+        // Method 1: Using custom mapper: UserMapper
 //        return UserMapper.mapToUserDto(userRepository.save(existingUser));
 
-        // Using ModelMapper library
-        return modelMapper.map(userRepository.save(existingUser), UserDto.class);
+        // Method 2: Using ModelMapper library
+//        return modelMapper.map(userRepository.save(existingUser), UserDto.class);
+
+        // Method 3: Using ModelMapper library
+        return AutoUserMapper.MAPPER.mapToUserDto(userRepository.save(existingUser));
     }
 
     @Override
