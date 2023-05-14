@@ -1,7 +1,6 @@
 package com.yrol.springbootrestfulwebservices.controller;
 
 import com.yrol.springbootrestfulwebservices.dto.UserDto;
-import com.yrol.springbootrestfulwebservices.entity.User;
 import com.yrol.springbootrestfulwebservices.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -53,7 +52,7 @@ public class UserController {
      * http://localhost:8080/api/users/1
      */
     @PutMapping("{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId, @RequestBody User user) {
+    public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId, @RequestBody UserDto user) {
         user.setId(userId); // setting the user using the parameterised ID
         UserDto updatedUser = userService.updateUser(user);
         return ResponseEntity.ok(updatedUser);

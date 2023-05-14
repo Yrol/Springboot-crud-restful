@@ -2,6 +2,7 @@ package com.yrol.springbootrestfulwebservices.service.impl;
 
 import com.yrol.springbootrestfulwebservices.dto.UserDto;
 import com.yrol.springbootrestfulwebservices.entity.User;
+import com.yrol.springbootrestfulwebservices.exception.ResourceNotFoundException;
 import com.yrol.springbootrestfulwebservices.mapper.AutoUserMapper;
 import com.yrol.springbootrestfulwebservices.mapper.UserMapper;
 import com.yrol.springbootrestfulwebservices.repository.UserRepository;
@@ -55,16 +56,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserById(Long userId) throws NoSuchElementException {
-        Optional<User> optionalUser = userRepository.findById(userId);
+    public UserDto getUserById(Long userId) {
+//        Optional<User> optionalUser = userRepository.findById(userId);
 
-        try {
-//            return UserMapper.mapToUserDto(optionalUser.get()); // Using UserMapper custom mapper
-//            return modelMapper.map(optionalUser.get(), UserDto.class); // using ModelMapper library
-            return AutoUserMapper.MAPPER.mapToUserDto(optionalUser.get()); // Using MapStruct library
-        } catch (NoSuchElementException e) {
-            return null;
-        }
+        // throw custom exception - ResourceNotFoundException if user not found
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", userId)
+        );
+
+//        return UserMapper.mapToUserDto(optionalUser.get()); // Using UserMapper custom mapper
+//        return modelMapper.map(optionalUser.get(), UserDto.class); // using ModelMapper library
+        return AutoUserMapper.MAPPER.mapToUserDto(user); // Using MapStruct library
     }
 
     @Override
@@ -86,11 +88,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateUser(User user) {
-        User existingUser = userRepository.findById(user.getId()).get();
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setEmail(user.getEmail());
+    public UserDto updateUser(UserDto userDto) {
+//        User existingUser = userRepository.findById(user.getId()).get();
+
+        // throw custom exception - ResourceNotFoundException if user not found
+        User existingUser = userRepository.findById(userDto.getId()).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", userDto.getId())
+        );
+        existingUser.setFirstName(userDto.getFirstName());
+        existingUser.setLastName(userDto.getLastName());
+        existingUser.setEmail(userDto.getEmail());
 
         // Method 1: Using custom mapper: UserMapper
 //        return UserMapper.mapToUserDto(userRepository.save(existingUser));
@@ -104,6 +111,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long userId) {
+
+        // throw custom exception - ResourceNotFoundException if user not found
+        User existingUser = userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", userId)
+        );
+
         userRepository.deleteById(userId);
     }
 }
