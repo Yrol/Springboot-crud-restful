@@ -2,6 +2,7 @@ package com.yrol.springbootrestfulwebservices.service.impl;
 
 import com.yrol.springbootrestfulwebservices.dto.UserDto;
 import com.yrol.springbootrestfulwebservices.entity.User;
+import com.yrol.springbootrestfulwebservices.exception.EmailAlreadyExistsException;
 import com.yrol.springbootrestfulwebservices.exception.ResourceNotFoundException;
 import com.yrol.springbootrestfulwebservices.mapper.AutoUserMapper;
 import com.yrol.springbootrestfulwebservices.mapper.UserMapper;
@@ -50,6 +51,14 @@ public class UserServiceImpl implements UserService {
          * Method 3: Using MapStruct library
          * Convert UserDto into User JPA entity, and Converting the User JPA to entity to UserDto
          * **/
+
+        Optional<User> userWithEmail = userRepository.findByEmail(userDto.getEmail());
+
+        if(userWithEmail.isPresent()) {
+            throw new EmailAlreadyExistsException(userDto.getEmail());
+        }
+
+
         User user = AutoUserMapper.MAPPER.mapToUser(userDto);
         User savedUser = userRepository.save(user);
         return AutoUserMapper.MAPPER.mapToUserDto(savedUser);
