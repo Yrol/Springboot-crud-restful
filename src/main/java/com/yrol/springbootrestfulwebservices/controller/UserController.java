@@ -1,12 +1,16 @@
 package com.yrol.springbootrestfulwebservices.controller;
 
 import com.yrol.springbootrestfulwebservices.dto.UserDto;
+import com.yrol.springbootrestfulwebservices.exception.ErrorDetails;
+import com.yrol.springbootrestfulwebservices.exception.ResourceNotFoundException;
 import com.yrol.springbootrestfulwebservices.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -63,4 +67,20 @@ public class UserController {
         userService.deleteUser(userId);
         return new ResponseEntity<>("", HttpStatus.NO_CONTENT);
     }
+
+    /**
+     * Handling controller specific exceptions. Ex: handling custom ResourceNotFoundException with a custom message
+     * **/
+//    @ExceptionHandler(ResourceNotFoundException.class)
+//    public ResponseEntity<ErrorDetails> handleResourceNotFoundException(ResourceNotFoundException exception, WebRequest webRequest) {
+//
+//        ErrorDetails errorDetails = new ErrorDetails(
+//                LocalDateTime.now(),
+//                exception.getMessage(),
+//                webRequest.getDescription(false),
+//                "USER_NOT_FOUND"
+//        );
+//
+//        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+//    }
 }
