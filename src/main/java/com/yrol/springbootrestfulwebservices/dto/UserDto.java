@@ -14,12 +14,13 @@ import lombok.Setter;
 public class UserDto {
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "user first name should not be null or empty") // overriding the default bean error message
     private String firstName;
 
-    @NotEmpty
+    @NotEmpty(message = "user last name should not be null or empty")
     private String lastName;
 
+    @NotEmpty(message = "user email should not be null or empty")
     @Email
     private String email;
 }
