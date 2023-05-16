@@ -57,6 +57,11 @@
 			<version>${org.mapstruct.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -73,6 +78,8 @@
 					</excludes>
 				</configuration>
 			</plugin>
+
+			<!-- Plugin for MapStruct dependeancy-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>

@@ -4,6 +4,7 @@ import com.yrol.springbootrestfulwebservices.dto.UserDto;
 import com.yrol.springbootrestfulwebservices.exception.ErrorDetails;
 import com.yrol.springbootrestfulwebservices.exception.ResourceNotFoundException;
 import com.yrol.springbootrestfulwebservices.service.UserService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,11 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+/**
+ * Controller calling the CRUD operation for User
+ * Consist of Bean validation for create and update
+ * **/
 
 @RestController
 @AllArgsConstructor
@@ -27,7 +33,7 @@ public class UserController {
      * User creation POST REST API
      **/
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         UserDto savedUser = userService.createUser(userDto);
         return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
@@ -56,7 +62,7 @@ public class UserController {
      * http://localhost:8080/api/users/1
      */
     @PutMapping("{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable("id") Long userId, @RequestBody UserDto user) {
+    public ResponseEntity<UserDto> updateUser(@Valid @PathVariable("id") Long userId, @RequestBody UserDto user) {
         user.setId(userId); // setting the user using the parameterised ID
         UserDto updatedUser = userService.updateUser(user);
         return ResponseEntity.ok(updatedUser);
