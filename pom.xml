@@ -62,6 +62,14 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
+		<!-- Adding the Spring Actuator endpoint which allows to check the health of the application as well as configs.
+			localhost:8080/actuator - will expose actuator endpoints
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>
