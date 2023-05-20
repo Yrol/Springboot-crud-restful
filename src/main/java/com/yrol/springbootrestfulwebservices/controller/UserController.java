@@ -4,6 +4,9 @@ import com.yrol.springbootrestfulwebservices.dto.UserDto;
 import com.yrol.springbootrestfulwebservices.exception.ErrorDetails;
 import com.yrol.springbootrestfulwebservices.exception.ResourceNotFoundException;
 import com.yrol.springbootrestfulwebservices.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,11 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+@Tag(
+        name = "CRUD REST APIs for User Resource",
+        description = "Create User, Update User, Get User, Get All Users & Delete User"
+)
 
 /**
  * Controller calling the CRUD operation for User
@@ -31,7 +39,18 @@ public class UserController {
 
     /**
      * User creation POST REST API
+     * [POST] http://localhost:8080/api/users
+     * Using @Operation and @ApiResponse for Swagger
      **/
+
+    @Operation(
+            summary = "Create User REST API",
+            description = "Creating users using basic information (firstname, lastname and email)"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "HTTP Status 201 CREATED"
+    )
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         UserDto savedUser = userService.createUser(userDto);
@@ -40,8 +59,18 @@ public class UserController {
 
     /**
      * Get user by ID REST API
-     * http://localhost:8080/api/users/1
+     * [GET] http://localhost:8080/api/users/1
+     * Using @Operation and @ApiResponse for Swagger
      * **/
+
+    @Operation(
+            summary = "Get User REST API",
+            description = "Fetching users by ID"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status 200 CREATED"
+    )
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long userId) {
         UserDto user = userService.getUserById(userId);
@@ -50,8 +79,18 @@ public class UserController {
 
     /**
      * Get all users
-     * http://localhost:8080/api/users
+     * [GET] http://localhost:8080/api/users
+     * Using @Operation and @ApiResponse for Swagger
      * **/
+
+    @Operation(
+            summary = "Get all users REST API",
+            description = "Fetching all users"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status 200 CREATED"
+    )
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -59,8 +98,17 @@ public class UserController {
 
     /**
      * Update existing user REST API
-     * http://localhost:8080/api/users/1
+     * [PATCH] http://localhost:8080/api/users/1
+     * Using @Operation and @ApiResponse for Swagger
      */
+    @Operation(
+            summary = "Update User REST API",
+            description = "Update users by ID"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP Status 200 CREATED"
+    )
     @PutMapping("{id}")
     public ResponseEntity<UserDto> updateUser(@Valid @PathVariable("id") Long userId, @RequestBody UserDto user) {
         user.setId(userId); // setting the user using the parameterised ID
@@ -68,6 +116,19 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
+    /**
+     * Delete an existing user by ID
+     * [DELETE] http://localhost:8080/api/users/1
+     * Using @Operation and @ApiResponse for Swagger
+     * **/
+    @Operation(
+            summary = "Delete User REST API",
+            description = "Delete users by ID"
+    )
+    @ApiResponse(
+            responseCode = "204",
+            description = "HTTP Status 204 CREATED"
+    )
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteUser(@PathVariable("id") Long userId) {
         userService.deleteUser(userId);
